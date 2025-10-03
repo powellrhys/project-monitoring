@@ -9,8 +9,23 @@ description = "Python project to display and monitor all powellrhys projects"
 authors = ["Rhys Powell"]
 packages = [
     { include = "backend" },
+    { include = "frontend" },
+    { include = "shared" }
 ]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+azure-storage-blob = "12.24.0"
 python-dotenv = "1.0.1"
+streamlit = "1.46.0"
+Authlib = "1.5.1"
+pandas = "2.2.3"
+plotly = "6.0.1"
+streamlit-components = { git = "https://github.com/powellrhys/python-streamlit-components.git", tag = "v0.1.6" }
+behave = "1.2.6"
+pytest = "8.3.4"
+pytest-cov = "5.0.0"
+
+[tool.poetry.extras]
+frontend = ["streamlit", "Authlib", "pandas", "plotly", "streamlit-components"]
+testing = ["behave", "pytest", "pytest-cov"]

@@ -2,6 +2,6 @@
 from .functions.orchestation import WorkflowScrapper
 
 # List of repos to monitor
-REPOS = ["golf-ui-streamlit", "play-cricket", "strava-ui-streamlit"]
+REPOS = ["golf-ui-streamlit", "fantasy-premier-league", "play-cricket", "strava-ui-streamlit"]
 
 WorkflowScrapper(REPOS=REPOS).run()

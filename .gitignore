@@ -141,3 +141,6 @@ __azurite_db*__.json
 
 # data
 data
+
+# streamlit
+.streamlit/secrets.toml

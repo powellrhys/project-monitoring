@@ -34,7 +34,6 @@ class WorkflowScrapper:
                                  f"{[wf['name'] for wf in workflows]} \n")
 
                 # Iterate through each workflow and log status message
-                all_runs = []
                 for wf_i, wf in enumerate(iterable=workflows, start=1):
                     self.logger.info(f"{wf_i}/{len(workflows)} - Collecting workflow run data for {wf['name']}...")
 
@@ -43,8 +42,11 @@ class WorkflowScrapper:
                         self.logger.info(f"{len(wf_runs)} workflow runs recorded for {wf['name']}. Last run recorded "
                                          f"at {wf_runs[0]['run_started_at']} | Status: {wf_runs[0]['conclusion']} \n")
 
-                        client.aggregate_workflow_data(repo=repo, wf_name=wf["name"],
-                                                       workflow_runs=wf_runs, all_runs=all_runs)
+                        wf_runs = client.aggregate_workflow_data(repo=repo, wf_name=wf["name"], workflow_runs=wf_runs)
+
+                        # Save results to JSON for dashboard
+                        with open(f"data/workflows_{repo}_{wf['name']}.json", "w") as f:
+                            json.dump(wf_runs, f, indent=2)
 
                     except requests.exceptions.RequestException as e:
                         self.logger.error(f"Error fetching data for {wf['name']}: {e}")
@@ -53,10 +55,6 @@ class WorkflowScrapper:
                     except Exception as e:
                         self.logger.error(f"Failed to aggregate workflow run data - {e}")
                         break
-
-                    # Save results to JSON for dashboard
-                    with open(f"data/workflows_{repo}.json", "w") as f:
-                        json.dump(all_runs, f, indent=2)
 
                 self.logger.info(f"Updated workflow data for {repo} \n")
 
