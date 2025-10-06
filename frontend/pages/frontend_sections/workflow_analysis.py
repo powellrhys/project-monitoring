@@ -13,7 +13,7 @@ def render_workflows_analysis() -> None:
 
     repo_wf_map = create_repo_workflow_map()
 
-    columns = st.columns([1, 1, 3, 1])
+    columns = st.columns([1, 1, 1, 2, 1])
 
     with columns[0]:
         repo = st.selectbox(label="Repository", options=repo_wf_map.keys())
@@ -52,7 +52,7 @@ def render_workflows_analysis() -> None:
                 y='duration_seconds',
                 title='Workflow Run Duration Over Time',
                 markers=True,
-                labels={'duration_seconds':'Duration (s)', 'created_at': 'Run Date'}).plot_line())
+                labels={'duration_seconds': 'Duration (s)', 'created_at': 'Run Date'}).plot_line())
 
         with columns[-1]:
             st.plotly_chart(PlotlyPlotter(

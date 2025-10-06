@@ -1,0 +1,26 @@
+name: Build & Deploy Application
+on:
+  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+  push:
+    branches:
+      - main
+      - feature/*
+
+jobs:
+  # Lint yaml codebase
+  lint-yaml:
+    name: Lint Yaml Pipelines
+    uses: powellrhys/powellrhys-iac/.github/workflows/template-lint-yaml.yml@v1.0.0
+    with:
+      config_path: '.yamllint.yml'
+
+  # Lint python codebase
+  lint-python:
+    name: Lint Python Codebase
+    uses: powellrhys/powellrhys-iac/.github/workflows/template-lint-python.yml@v1.0.0
+    with:
+      config_path: '.flake8'
+      code_directory: '.'
