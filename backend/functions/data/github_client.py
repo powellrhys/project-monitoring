@@ -15,7 +15,7 @@ class GitHubClient:
 
         Args: GITHUB_TOKEN (str): GitHub personal access token used for authentication.
         """
-        self.logge = configure_logging()
+        self.logger = configure_logging()
         self.base_url = "https://api.github.com/repos/powellrhys"
         self.HEADERS = {"Authorization": f"token {GITHUB_TOKEN}"}
 
@@ -32,7 +32,7 @@ class GitHubClient:
         workflows_url = f"{self.base_url}/{repo}/actions/workflows"
 
         # Execute request
-        workflows_resp = requests.get(workflows_url, headers=self.HEADERS)
+        workflows_resp = requests.get(workflows_url, headers=self.HEADERS, timeout=30)
         workflows_resp.raise_for_status()
 
         # Collect workflow data
@@ -74,7 +74,8 @@ class GitHubClient:
             end_time = datetime.fromisoformat(end_time_str.replace("Z", "+00:00"))
             duration_seconds = (end_time - start_time).total_seconds()
 
-        except Exception:
+        except (ValueError, AttributeError, TypeError) as e:
+            self.logger.warning(f"Failed to calculate duration for run: {e}")
             duration_seconds = None
 
         return duration_seconds

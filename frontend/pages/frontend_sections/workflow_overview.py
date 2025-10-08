@@ -5,11 +5,19 @@ import pandas as pd
 
 def render_workflow_overview(df: pd.DataFrame) -> None:
     """
+    Render a Streamlit dashboard section displaying an overview of project workflows.
+
+    Transforms the provided workflow DataFrame and displays it in a formatted table
+    with repository links, workflow status, duration, and recent activity details.
+    Intended to give a quick summary of workflow health and activity across projects.
     """
+    # Render section title
     st.title("Project Workflows Overview")
 
+    # Transform dataframe
     df = transform_workflow_overview_df(df=df)
 
+    # Render dataframe
     st.dataframe(
         df,
         column_config={

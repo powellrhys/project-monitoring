@@ -29,12 +29,12 @@ class WorkflowScrapper:
         and data processing errors gracefully, logging progress and issues.
         """
         # Iterate through each repo and collect workflow data
-        self.logger.critical("Running Workflow Scrapping flow \n")
+        self.logger.info("Running Workflow Scrapping flow \n")
         for repo_i, repo in enumerate(iterable=self.REPOS, start=1):
 
             try:
                 # Log progress message
-                self.logger.critical(f"{repo_i}/{len(self.REPOS)} - Collecting workflow data for repo: {repo}... \n")
+                self.logger.info(f"{repo_i}/{len(self.REPOS)} - Collecting workflow data for repo: {repo}... \n")
 
                 # Define GithubClient class
                 client = GitHubClient(GITHUB_TOKEN=self.vars.GITHUB_TOKEN)
@@ -60,14 +60,14 @@ class WorkflowScrapper:
                             json.dump(wf_runs, f, indent=2)
 
                     except requests.exceptions.RequestException as e:
-                        self.logger.error(f"Error fetching data for {wf['name']}: {e}")
+                        self.logger.exception(f"Error fetching data for {wf['name']}: {e}")
                         break
 
-                    except Exception as e:
-                        self.logger.error(f"Failed to aggregate workflow run data - {e}")
+                    except json.JSONDecodeError as e:
+                        self.logger.exception(f"Failed to parse workflow run data - {e}")
                         break
 
                 self.logger.info(f"Updated workflow data for {repo} \n")
 
             except requests.exceptions.RequestException as e:
-                self.logger.error(f"Error fetching data for {repo}: {e} \n")
+                self.logger.exception(f"Error fetching data for {repo}: {e} \n")
