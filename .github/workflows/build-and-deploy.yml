@@ -26,3 +26,12 @@ jobs:
     with:
       config_path: '.flake8'
       code_directory: '.'
+
+  # Run PyTests
+  pytesting:
+    name: Run PyTests
+    uses: powellrhys/powellrhys-iac/.github/workflows/template-run-pytests.yml@v1.0.0
+    secrets:
+      codecov_token: ${{ secrets.codecov_token }}
+    with:
+      toml_dependencies: '.[frontend,backend,testing]'
