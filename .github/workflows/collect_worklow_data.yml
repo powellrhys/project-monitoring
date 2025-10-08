@@ -13,8 +13,8 @@ on:
       - ".github/workflows/collect-workflow-data.yml"
 
 jobs:
-  collect_scorecard_data:
-    name: Collect Scorecard Data
+  collect_workflow_data:
+    name: Collect Workflow Data
     runs-on: ubuntu-latest
 
     steps:

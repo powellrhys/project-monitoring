@@ -3,7 +3,7 @@ from functions.data_functions import transform_workflow_overview_df
 import streamlit as st
 import pandas as pd
 
-def render_overview_page(df: pd.DataFrame) -> None:
+def render_workflow_overview(df: pd.DataFrame) -> None:
     """
     """
     st.title("Project Workflows Overview")

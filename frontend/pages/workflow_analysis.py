@@ -13,4 +13,5 @@ if not st.user.is_logged_in:
 # If user logged in, render streamlit content
 if st.user.is_logged_in:
 
+    # Render workflow analysis page
     render_workflows_analysis()
