@@ -6,9 +6,15 @@ import json
 
 class WorkflowScrapper:
     """
+    A utility class for collecting and storing GitHub Actions workflow data
+    across multiple repositories. Uses the GitHubClient to fetch workflow
+    details, run metadata, and durations, and saves the results to JSON files.
     """
     def __init__(self, REPOS: list) -> None:
         """
+        Initialize the WorkflowScrapper with a list of repositories to process.
+
+        Args: REPOS (list): A list of repository names to collect workflow data from.
         """
         self.logger = configure_logging()
         self.REPOS = REPOS
@@ -16,6 +22,11 @@ class WorkflowScrapper:
 
     def run(self) -> None:
         """
+        Execute the workflow data collection process for all configured repositories.
+
+        Iterates through each repository, fetches workflow and run data using the
+        GitHubClient, and writes the aggregated results to JSON files. Handles API
+        and data processing errors gracefully, logging progress and issues.
         """
         # Iterate through each repo and collect workflow data
         self.logger.critical("Running Workflow Scrapping flow \n")

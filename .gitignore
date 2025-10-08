@@ -140,7 +140,7 @@ __azurite_db*__.json
 .DS_Store
 
 # data
-./data
+data/*
 
 # streamlit
 .streamlit/secrets.toml
