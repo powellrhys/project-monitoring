@@ -1,0 +1,46 @@
+name: Collect Workflow Data
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 4"
+  push:
+    paths:
+      - 'backend/**'
+      - ".github/workflows/collect_workflow_data.yml"
+  pull_request:
+    paths:
+      - 'backend/**'
+      - ".github/workflows/collect_workflow_data.yml"
+
+jobs:
+  collect_workflow_data:
+    name: Collect Workflow Data
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out codebase
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Setup python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+
+      # Install Poetry
+      - name: Install Poetry
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+
+      # Install project dependencies via Poetry
+      - name: Install dependencies
+        run: |
+          poetry install --no-interaction --no-root
+
+      # Run data collection script - Scorecard
+      - name: Run Data Collection Script
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: poetry run python -m backend.collect_workflow_data
