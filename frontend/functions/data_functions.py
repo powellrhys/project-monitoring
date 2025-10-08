@@ -1,8 +1,7 @@
 # Import dependencies
 from datetime import datetime, timezone
+from shared import BlobClient
 import pandas as pd
-import json
-import os
 
 def collect_project_workflows() -> list:
     """
@@ -11,7 +10,8 @@ def collect_project_workflows() -> list:
     Returns:
         list: A list of filenames representing saved workflow data.
     """
-    return os.listdir("data/")
+    return [file.split("/")[-1] for file in BlobClient(source="frontend")
+            .list_blob_filenames(container_name="project-monitoring", directory_path="workflows")]
 
 def create_repo_workflow_map() -> dict:
     """
@@ -27,11 +27,11 @@ def create_repo_workflow_map() -> dict:
     files = collect_project_workflows()
 
     # Collect list of unique projects
-    projects = list(set([file.split("_")[1] for file in files]))
+    projects = list(set([file.split("_")[0] for file in files]))
 
     return {
         project: [
-            wf.replace(f"workflows_{project}_", "").replace(".json", "")
+            wf.replace(f"{project}_", "").replace(".json", "")
             for wf in files if project in wf
         ]
         for project in projects
@@ -48,13 +48,14 @@ def collect_latest_workflow_runs() -> pd.DataFrame:
         pd.DataFrame: A DataFrame containing the most recent workflow run per file.
     """
     # List files
-    files = os.listdir("data/")
+    files = BlobClient(source="frontend") \
+        .list_blob_filenames(container_name="project-monitoring", directory_path="workflows")
 
     # Load all files and store latest workflow runs
     workflows = []
     for file in files:
-        with open(f"data/{file}", "r", encoding="utf-8") as f:
-            data = json.load(f)
+        data = BlobClient(source="frontend") \
+            .read_blob_to_dict(container="project-monitoring", input_filename=f"{file}")
 
         # Grab last run and append to workflows list
         last_run = data[0]

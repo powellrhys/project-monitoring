@@ -43,4 +43,5 @@ jobs:
       - name: Run Data Collection Script
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          blob_storage_connection_string: ${{ secrets.blob_storage_connection_string }}
         run: poetry run python -m backend.collect_workflow_data

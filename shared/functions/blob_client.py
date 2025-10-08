@@ -24,7 +24,7 @@ class BlobClient(AbstractBlobClient):
         Variables: Provides configuration variables such as connection strings.
 
     Attributes:
-        blob_account_connection_string (str): Inherited from `Variables`,
+        blob_storage_connection_string (str): Inherited from `Variables`,
             used to authenticate and connect to the Azure Blob account.
     """
     def __init__(self, source: str = "backend"):
@@ -56,7 +56,7 @@ class BlobClient(AbstractBlobClient):
             List[str]: List of blob names matching the prefix.
         """
         # Create blob service client + container client
-        blob_service_client = BlobServiceClient.from_connection_string(self.vars.blob_account_connection_string)
+        blob_service_client = BlobServiceClient.from_connection_string(self.vars.blob_storage_connection_string)
         container_client = blob_service_client.get_container_client(container_name)
 
         # Collect a list of files in a container
@@ -93,7 +93,7 @@ class BlobClient(AbstractBlobClient):
 
         # Connect to Azure Blob Storage
         blob_service_client = BlobServiceClient.from_connection_string(
-            self.vars.blob_account_connection_string)
+            self.vars.blob_storage_connection_string)
 
         # Connect to the specific blob in the container
         blob_client = blob_service_client.get_blob_client(
@@ -130,7 +130,7 @@ class BlobClient(AbstractBlobClient):
         """
         # Define blob service client
         blob_service_client = BlobServiceClient.from_connection_string(
-            self.vars.blob_account_connection_string
+            self.vars.blob_storage_connection_string
         )
 
         # Define container client

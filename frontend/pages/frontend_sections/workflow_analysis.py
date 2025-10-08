@@ -1,9 +1,9 @@
 # Import dependencies
 from streamlit_components.plot_functions import PlotlyPlotter
 from functions.data_functions import create_repo_workflow_map
+from shared import BlobClient
 import streamlit as st
 import pandas as pd
-import json
 
 def render_workflows_analysis() -> None:
     """
@@ -32,8 +32,8 @@ def render_workflows_analysis() -> None:
         workflow = st.selectbox(label="Workflow", options=repo_wf_map[repo])
 
     # Read data from storage
-    with open(f"data/workflows_{repo}_{workflow}.json", "r", encoding="utf-8") as f:
-        data = json.load(f)
+    data = BlobClient(source="frontend") \
+        .read_blob_to_dict(container="project-monitoring", input_filename=f"workflows/{repo}_{workflow}.json")
 
     # Generate dataframe from data
     df = pd.DataFrame(data=data)

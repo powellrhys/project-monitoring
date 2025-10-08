@@ -1,10 +1,11 @@
 # Import dependencies
+from ..data import GitHubClient
 from ..logging import configure_logging
-from ..data import GitHubClient, Variables
+from shared import BlobClient, Variables
 import requests
 import json
 
-class WorkflowScrapper:
+class WorkflowScrapper(BlobClient):
     """
     A utility class for collecting and storing GitHub Actions workflow data
     across multiple repositories. Uses the GitHubClient to fetch workflow
@@ -55,9 +56,9 @@ class WorkflowScrapper:
 
                         wf_runs = client.aggregate_workflow_data(repo=repo, wf_name=wf["name"], workflow_runs=wf_runs)
 
-                        # Save results to JSON for dashboard
-                        with open(f"data/workflows_{repo}_{wf['name']}.json", "w") as f:
-                            json.dump(wf_runs, f, indent=2)
+                        # Export data to blob storage
+                        self.export_dict_to_blob(data=wf_runs, container="project-monitoring",
+                                                 output_filename=f"workflows/{repo}_{wf['name']}.json")
 
                     except requests.exceptions.RequestException as e:
                         self.logger.exception(f"Error fetching data for {wf['name']}: {e}")
