@@ -1,4 +1,4 @@
-name: Collect Scorecard Data
+name: Collect Workflow Data
 on:
   workflow_dispatch:
   schedule:

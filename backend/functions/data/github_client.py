@@ -1,6 +1,7 @@
 # Import dependencies
 from ..logging import configure_logging
 from datetime import datetime
+from typing import Optional
 import requests
 
 class GitHubClient:
@@ -58,7 +59,7 @@ class GitHubClient:
         # Collect workflow runs data
         return runs_resp.json().get("workflow_runs", [])
 
-    def workflow_duration(self, run: dict) -> int:
+    def workflow_duration(self, run: dict) -> Optional[int]:
         """
         Calculate the duration of a workflow run in seconds.
 
@@ -74,8 +75,9 @@ class GitHubClient:
             end_time = datetime.fromisoformat(end_time_str.replace("Z", "+00:00"))
             duration_seconds = (end_time - start_time).total_seconds()
 
-        except (ValueError, AttributeError, TypeError) as e:
-            self.logger.warning(f"Failed to calculate duration for run: {e}")
+        # ISO parsing or missing fields
+        except (ValueError, TypeError, AttributeError) as e:
+            self.logger.warning(f"Failed to calculate duration (run_number={run.get('run_number')}): {e}")
             duration_seconds = None
 
         return duration_seconds
