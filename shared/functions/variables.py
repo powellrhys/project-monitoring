@@ -13,13 +13,14 @@ class Variables():
         Initialize and load all required environment variables into attributes.
 
         Attributes:
-            blob_account_connection_string (str): Azure Blob Storage connection string.
+            blob_storage_connection_string (str): Azure Blob Storage connection string.
         """
         # Shared variables
         if source == "backend":
-            self.blob_account_connection_string = os.getenv("blob_storage_connection_string")
+            self.blob_storage_connection_string = os.getenv("blob_storage_connection_string")
+            self.GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
         else:
-            self.blob_account_connection_string = st.secrets["general"]["blob_storage_connection_string"]
+            self.blob_storage_connection_string = st.secrets["general"]["blob_storage_connection_string"]
 
     def __getitem__(self, key):
         """
