@@ -66,7 +66,7 @@ def then_check_transformed_values(context):
     """
     THEN step:
     Validate that durations are formatted as 'Xm Ys', repo URLs are correctly prefixed,
-    days_since_last_run is integer, and status_flag values are correct.
+    days_since_last_run is integer, and status_flag values are valid.
     """
     df = context.result
 
@@ -82,7 +82,29 @@ def then_check_transformed_values(context):
     assert pd.api.types.is_integer_dtype(df["days_since_last_run"]), \
         "days_since_last_run column is not integer type."
 
-    # status_flag contains only valid values
+    # status_flag values only contain valid options
     valid_flags = {"🟢 Active", "🔴 Inactive"}
     assert set(df["status_flag"].unique()).issubset(valid_flags), \
         "status_flag column contains unexpected values."
+
+
+@then(u'the status_flag column should correctly reflect the active_status')
+def step_check_status_flag(context):
+    """
+    THEN step:
+    Verify that each status_flag in the transformed DataFrame matches
+    the expected value derived from the original input_df's active_status column.
+    """
+    transformed_df = context.result
+    input_df = context.input_df.set_index("workflow_name")  # Use input DataFrame for reference
+
+    for idx, row in transformed_df.iterrows():
+        workflow_name = row["workflow_name"]
+        active_status = input_df.loc[workflow_name, "active_status"]
+        expected_flag = "🟢 Active" if active_status.strip().lower() == "active" else "🔴 Inactive"
+        actual_flag = row["status_flag"]
+
+        assert actual_flag == expected_flag, (
+            f"status_flag for workflow '{workflow_name}' is '{actual_flag}' "
+            f"but expected '{expected_flag}' based on active_status='{active_status}'"
+        )
