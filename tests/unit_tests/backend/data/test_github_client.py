@@ -233,7 +233,7 @@ def test_aggregate_workflow_data_returns_expected_structure(mock_logger):
     ]
 
     # Call aggregate_workflow_data with test repository, workflow, and runs
-    result = client.aggregate_workflow_data("repoZ", "deploy", runs)
+    result = client.aggregate_workflow_data("repoZ", "deploy", runs, "active")
 
     # Assert the returned value is a list
     assert isinstance(result, list)

@@ -50,11 +50,13 @@ class WorkflowScrapper(BlobClient):
                     self.logger.info(f"{wf_i}/{len(workflows)} - Collecting workflow run data for {wf['name']}...")
 
                     try:
+                        wf_state = wf.get("state")
                         wf_runs = client.collect_workflow_metadata(repo=repo, workflow=wf)
                         self.logger.info(f"{len(wf_runs)} workflow runs recorded for {wf['name']}. Last run recorded "
                                          f"at {wf_runs[0]['run_started_at']} | Status: {wf_runs[0]['conclusion']} \n")
 
-                        wf_runs = client.aggregate_workflow_data(repo=repo, wf_name=wf["name"], workflow_runs=wf_runs)
+                        wf_runs = client.aggregate_workflow_data(repo=repo, wf_name=wf["name"],
+                                                                 workflow_runs=wf_runs, state=wf_state)
 
                         # Export data to blob storage
                         self.export_dict_to_blob(data=wf_runs, container="project-monitoring",

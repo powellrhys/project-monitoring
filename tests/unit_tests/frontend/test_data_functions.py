@@ -131,21 +131,21 @@ def test_collect_latest_workflow_runs(mock_blob_client):
     )
     assert mock_instance.read_blob_to_dict.call_count == 2
 
-
 def test_transform_workflow_overview_df():
     """
-    Test that `transform_workflow_overview_df` correctly enhances workflow data
-    with additional computed columns such as duration formatting, days since
-    last run, and activity status flags.
+    Test that `transform_workflow_overview_df` correctly transforms workflow data
+    with duration formatting, days-since-last-run calculation, and status flag
+    assignment based on the `active_status` field.
 
     Steps:
-    - Provide a mock DataFrame with basic workflow info and timestamps.
-    - Call the transform function.
-    - Verify the resulting DataFrame includes the new columns and expected values.
-    - Confirm days-since and status flag calculations.
-    - Ensure sorting order is consistent.
+    - Create a mock DataFrame with representative workflow data.
+    - Apply the transform function.
+    - Validate structure, column presence, and computed values.
+    - Confirm that status flags map correctly from `active_status`.
+    - Check duration formatting and repo URL construction.
+    - Ensure sorting order is stable and predictable.
     """
-    # Arrange: create a mock input DataFrame
+    # Arrange input test data
     now = datetime.now(timezone.utc)
     df_input = pd.DataFrame([
         {
@@ -155,6 +155,7 @@ def test_transform_workflow_overview_df():
             "status": "success",
             "html_url": "https://github.com/powellrhys/repo1/actions/runs/1",
             "duration_seconds": 125,
+            "active_status": "active",
         },
         {
             "repo": "repo2",
@@ -163,13 +164,14 @@ def test_transform_workflow_overview_df():
             "status": "failure",
             "html_url": "https://github.com/powellrhys/repo2/actions/runs/2",
             "duration_seconds": 360,
+            "active_status": "inactive",
         },
     ])
 
-    # Act: transform the input DataFrame
+    # Act - execute function
     result = transform_workflow_overview_df(df_input)
 
-    # Assert: verify structure and expected columns
+    # Assert columns are as expected
     expected_cols = [
         "repo",
         "workflow_name",
@@ -182,21 +184,23 @@ def test_transform_workflow_overview_df():
     ]
     assert list(result.columns) == expected_cols
 
-    # Check duration formatting and repo URL consistency
+    # Check repo URL prefix
     assert result.iloc[0]["repo"].startswith("https://github.com/powellrhys/")
-    assert "m" in result.iloc[0]["duration"] and "s" in result.iloc[0]["duration"]
 
-    # Verify approximate days since last run
-    days_ago_1 = result[result["workflow_name"] == "build"]["days_since_last_run"].iloc[0]
-    days_ago_2 = result[result["workflow_name"] == "test"]["days_since_last_run"].iloc[0]
-    assert 9 <= days_ago_1 <= 11
-    assert 89 <= days_ago_2 <= 91
+    # Verify duration formatting
+    assert all("m" in d and "s" in d for d in result["duration"])
 
-    # Confirm status flag logic (active vs inactive)
-    flag_1 = result[result["workflow_name"] == "build"]["status_flag"].iloc[0]
-    flag_2 = result[result["workflow_name"] == "test"]["status_flag"].iloc[0]
-    assert flag_1 == "🟢 Active"
-    assert flag_2 == "🔴 Inactive"
+    # Check approximate day calculations
+    build_days = result[result["workflow_name"] == "build"]["days_since_last_run"].iloc[0]
+    test_days = result[result["workflow_name"] == "test"]["days_since_last_run"].iloc[0]
+    assert 9 <= build_days <= 11
+    assert 89 <= test_days <= 91
 
-    # Confirm expected sorting order by repo and recency
+    # Confirm correct mapping from active_status
+    build_flag = result[result["workflow_name"] == "build"]["status_flag"].iloc[0]
+    test_flag = result[result["workflow_name"] == "test"]["status_flag"].iloc[0]
+    assert build_flag == "🟢 Active"
+    assert test_flag == "🔴 Inactive"
+
+    # Ensure sorting order by repo and recency
     assert result.iloc[0]["repo"] <= result.iloc[1]["repo"]

@@ -89,7 +89,9 @@ def transform_workflow_overview_df(df: pd.DataFrame) -> pd.DataFrame:
     # Calculate days since last update
     df["days_since_last_run"] = (today - df["updated_at"]).dt.days
 
-    df["status_flag"] = df["days_since_last_run"].apply(lambda d: "🟢 Active" if d <= 60 else "🔴 Inactive")
+    # Create status flag column
+    df["status_flag"] = df["active_status"] \
+        .apply(lambda d: "🟢 Active" if d.strip().lower() == "active" else "🔴 Inactive")
 
     # Filter data columns
     df = df[

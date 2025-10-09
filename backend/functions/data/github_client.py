@@ -82,7 +82,7 @@ class GitHubClient:
 
         return duration_seconds
 
-    def aggregate_workflow_data(self, repo: str, wf_name: str, workflow_runs: list) -> list:
+    def aggregate_workflow_data(self, repo: str, wf_name: str, workflow_runs: list, state: str) -> list:
         """
         Aggregate workflow run data into a simplified list of dictionaries.
 
@@ -99,6 +99,7 @@ class GitHubClient:
             all_runs.append({
                 "repo": repo,
                 "workflow_name": wf_name,
+                "active_status": state,
                 "status": run.get("status"),
                 "conclusion": run.get("conclusion"),
                 "created_at": run.get("created_at"),
