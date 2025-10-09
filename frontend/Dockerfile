@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 RUN pip install --upgrade pip poetry
 
 # Copy project files
-COPY pyproject.toml poetry.lock* /app/
+COPY pyproject.toml poetry.lock /app/
 COPY frontend/entrypoint.sh /app/entrypoint.sh
 COPY . /app
 

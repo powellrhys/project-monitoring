@@ -1,6 +1,6 @@
 # Define azure app service module
 module "frontend" {
-    source = "git::https://github.com/powellrhys/powellrhys-iac.git//terraform/azure/app_service?ref=main"
+    source = "git::https://github.com/powellrhys/powellrhys-iac.git//terraform/azure/app_service?ref=v1.0.0"
 
     app_service_name    = "powellrhys-project-monitoring"
     resource_group_name = var.app_service_resource_group
