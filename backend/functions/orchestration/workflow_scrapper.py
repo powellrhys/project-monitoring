@@ -1,7 +1,7 @@
 # Import dependencies
-from ..data import GitHubClient
-from ..logging import configure_logging
 from shared import BlobClient, Variables
+from ..logging import configure_logging
+from ..data import GitHubClient
 import requests
 import json
 

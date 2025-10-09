@@ -1,5 +1,5 @@
 # Import dependencies
-from .functions.orchestation import WorkflowScrapper
+from .functions.orchestration import WorkflowScrapper
 
 # List of repos to monitor
 REPOS = ["golf-ui-streamlit", "fantasy-premier-league", "play-cricket", "strava-ui-streamlit"]
