@@ -72,3 +72,14 @@ jobs:
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
       app_service_app_settings: ${{ secrets.app_service_app_settings }}
+
+  # Restart App Service
+  restart-appservice:
+    needs: ['apply']
+    name: Restart App Service
+    uses: powellrhys/powellrhys-iac/.github/workflows/template-restart-appservice.yml@v1.0.0
+    with:
+      webapp_name: powellrhys-project-monitoring
+      resource_group: powellrhys-app-service-plan-rg
+    secrets:
+      azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
