@@ -3,7 +3,7 @@ from streamlit_components.ui_components import configure_page_config
 import streamlit as st
 
 # Set page config
-configure_page_config(repository_name='golf-ui-streamlit',
+configure_page_config(repository_name='project-monitoring',
                       page_icon=":chart_with_upwards_trend:")
 
 # Ensure user is authenticated to use application

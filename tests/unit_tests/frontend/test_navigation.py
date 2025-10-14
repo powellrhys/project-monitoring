@@ -17,9 +17,6 @@ def test_get_navigation(mock_st):
     - Assert that the function returns the same object returned by `st.navigation()`.
     """
     # Arrange ---------------------------------------------------------------
-    # Mock a dummy Variables object (not used internally)
-    mock_vars = MagicMock()
-
     # Create a mock navigation object to simulate what st.navigation() returns
     mock_navigation = MagicMock(name="nav_obj")
 
@@ -31,7 +28,7 @@ def test_get_navigation(mock_st):
 
     # Act -------------------------------------------------------------------
     # Call the function under test
-    result = get_navigation(mock_vars)
+    result = get_navigation()
 
     # Assert ---------------------------------------------------------------
     # Ensure the return value is what st.navigation() produced

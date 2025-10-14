@@ -5,7 +5,7 @@ from functions.data_functions import collect_latest_workflow_runs
 import streamlit as st
 
 # Set page config
-configure_page_config(repository_name='golf-ui-streamlit',
+configure_page_config(repository_name='project-monitoring',
                       page_icon=":chart_with_upwards_trend:")
 
 # Ensure user is authenticated to use application
